@@ -1,12 +1,12 @@
-# Super Find
+# Super Search
 
-Super Find is a Chrome extension that upgrades the normal browser find experience with pattern search, fuzzy matching, reusable saved searches, and a central notes system.
+Super Search is a Chrome extension that upgrades the normal browser find experience with pattern search, fuzzy matching, reusable saved searches, and a central notes system.
 
 It is designed to feel like a compact, familiar browser find bar while giving users much more power than the standard `Ctrl+F` / `Cmd+F`.
 
 ## What It Does
 
-Super Find lets you search the current webpage using:
+Super Search lets you search the current webpage using:
 
 - exact text matching
 - regular expressions
@@ -19,11 +19,11 @@ Super Find lets you search the current webpage using:
 
 ### 1. Supercharged Page Search
 
-Super Find works on normal HTML webpages and supports three main search styles:
+Super Search works on normal HTML webpages and supports three main search styles:
 
 - `Literal`
   Finds exact text or phrases.
-  Example: searching `iran` finds the exact typed text.
+  Example: searching `World` finds the exact typed text.
 
 - `Regex`
   Finds patterns instead of exact text.
@@ -31,13 +31,13 @@ Super Find works on normal HTML webpages and supports three main search styles:
 
 - `Fuzzy`
   Finds close matches when the typed word is slightly wrong.
-  Example: `irad` can still find `iran`.
+  Example: `Worls` can still find `World`.
 
 ### 2. Highlighting And Navigation
 
 All matches are highlighted directly on the page.
 
-The popup shows:
+The pop-up shows:
 
 - current match index
 - total match count
