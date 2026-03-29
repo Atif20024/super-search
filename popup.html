@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Super Find</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="panel hero">
+        <div class="title-row">
+          <p class="title">Super Find</p>
+          <button id="theme-toggle" class="mini-theme-button" type="button" title="Switch theme">Dark</button>
+        </div>
+
+        <div class="search-row">
+          <input id="query" placeholder="Find text, regex, or fuzzy match" />
+          <span id="result-count" class="result-count">0/0</span>
+          <button
+            id="toggle-save-form"
+            class="icon-button icon-button--ghost"
+            type="button"
+            title="Save this search. Example: save '\\b\\d{4}\\b' as Years."
+            aria-label="Save this search"
+          >
+            ⤓
+          </button>
+          <button
+            id="prev-match"
+            class="icon-button"
+            type="button"
+            title="Previous match. Example: Shift+Enter goes back to the earlier result."
+            aria-label="Previous match"
+          >
+            ↑
+          </button>
+          <button
+            id="next-match"
+            class="icon-button"
+            type="button"
+            title="Next match. Example: Enter goes forward to the next result."
+            aria-label="Next match"
+          >
+            ↓
+          </button>
+        </div>
+
+        <div class="mode-row" aria-label="Search mode">
+          <button
+            id="mode-literal"
+            class="mode-chip is-active"
+            type="button"
+            title="Use Literal for exact text. Example: searching 'iran' finds the exact word or phrase you typed."
+          >
+            Literal
+          </button>
+          <button
+            id="mode-regex"
+            class="mode-chip"
+            type="button"
+            title="Use Regex for patterns. Example: find emails, dates, URLs, years, or phone numbers."
+          >
+            Regex
+          </button>
+          <div id="regex-presets-wrap" class="regex-presets-wrap" hidden>
+            <button
+              id="regex-presets-toggle"
+              class="mini-icon-button"
+              type="button"
+              title="Regex presets. Example: email, phone, URL, date, year."
+              aria-label="Regex presets"
+            >
+              +
+            </button>
+            <div id="regex-presets-menu" class="regex-presets-menu" hidden>
+              <button class="regex-preset-item" type="button" data-preset="email" title="Find emails like name@example.com">
+                Email
+              </button>
+              <button class="regex-preset-item" type="button" data-preset="phone" title="Find phone numbers like +1 415-555-2671">
+                Phone
+              </button>
+              <button class="regex-preset-item" type="button" data-preset="url" title="Find links like https://example.com">
+                URL
+              </button>
+              <button class="regex-preset-item" type="button" data-preset="date" title="Find dates like 03/29/2026 or 2026-03-29">
+                Date
+              </button>
+              <button class="regex-preset-item" type="button" data-preset="year" title="Find 4-digit years like 2026">
+                Year
+              </button>
+            </div>
+          </div>
+          <button
+            id="mode-fuzzy"
+            class="mode-chip"
+            type="button"
+            title="Use Fuzzy for close matches or typos. Example: 'irad' can still find 'iran'."
+          >
+            Fuzzy
+          </button>
+          <button
+            id="case-toggle"
+            class="mode-chip"
+            type="button"
+            aria-pressed="false"
+            title="Turn on Case when capitals matter. Example: 'Iran' will not match 'iran'."
+          >
+            Case
+          </button>
+        </div>
+
+        <div id="save-form" class="save-row" hidden>
+          <input id="save-search-name" placeholder="Saved search name" />
+          <button id="save-search" class="primary-button" type="button">Save</button>
+          <button id="cancel-save" class="ghost-button" type="button">Cancel</button>
+        </div>
+
+        <p id="status" class="status" hidden></p>
+      </section>
+
+      <details class="panel panel--compact">
+        <summary class="summary-row">
+          <h2>Saved Searches</h2>
+        </summary>
+        <div class="details-body">
+          <div id="saved-searches" class="saved-searches empty-state details-body-inner">
+            No saved searches yet.
+          </div>
+        </div>
+      </details>
+
+      <details class="panel panel--compact">
+        <summary class="summary-row">
+          <h2>Notes</h2>
+        </summary>
+        <div class="details-body">
+          <div class="details-body-inner">
+            <div class="section-header notes-header">
+              <p class="hint">Saved with source website, so you can revisit later.</p>
+              <div class="saved-actions">
+                <button id="save-note" class="ghost-button" type="button">Add Note</button>
+                <button id="capture-selection" class="ghost-button" type="button">Add Selection</button>
+              </div>
+            </div>
+            <textarea
+              id="page-notes"
+              class="notes-area"
+              rows="4"
+              placeholder="Write a note here, then save it to your central notes..."
+            ></textarea>
+            <div id="notes-list" class="notes-list empty-state">No notes yet.</div>
+          </div>
+        </div>
+      </details>
+
+      <p class="hint shortcuts-hint">Shortcuts: open `Cmd+Shift+S`, add selection `Cmd+Shift+X`.</p>
+    </main>
+
+    <template id="saved-search-template">
+      <article class="saved-item">
+        <div class="saved-copy">
+          <p class="saved-name"></p>
+          <p class="saved-meta"></p>
+        </div>
+        <div class="saved-actions">
+          <button class="tiny-button icon-tiny run-saved" type="button" title="Run saved search">↺</button>
+          <button class="tiny-button icon-tiny delete-saved" type="button" title="Delete saved search">×</button>
+        </div>
+      </article>
+    </template>
+
+    <template id="note-template">
+      <article class="saved-item note-item">
+        <div class="saved-copy">
+          <p class="saved-name note-text"></p>
+          <p class="saved-meta note-meta"></p>
+        </div>
+        <div class="saved-actions">
+          <a class="tiny-button icon-tiny note-link" target="_blank" rel="noreferrer" title="Open source page">↗</a>
+          <button class="tiny-button icon-tiny delete-note" type="button" title="Delete note">×</button>
+        </div>
+      </article>
+    </template>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

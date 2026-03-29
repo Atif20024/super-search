@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "Super Find",
+  "version": "1.0.0",
+  "description": "A supercharged page finder with literal, regex, and fuzzy search, saved searches, and notes.",
+  "permissions": [
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_title": "Super Find",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F",
+        "mac": "Command+Shift+S"
+      }
+    },
+    "capture_selection_to_notes": {
+      "description": "Add the current page selection to notes",
+      "suggested_key": {
+        "default": "Ctrl+Shift+X",
+        "mac": "Command+Shift+X"
+      }
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
